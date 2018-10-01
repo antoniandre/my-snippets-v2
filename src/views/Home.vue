@@ -5,7 +5,7 @@
         v-layout(row wrap)
           v-flex(v-for="n in 16" :key="n" xs3 sm2 md2 lg1 d-flex)
             v-card.d-flex(flat tile)
-              router-link(to="/snippet/test")
+              router-link(to="/snippet/animated-svg-valid")
                 v-img(:src="`https://picsum.photos/250/150?image=${n * 5 + 10}`"
                       :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
                       aspect-ratio="1"

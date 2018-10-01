@@ -3,7 +3,7 @@
     v-layout.mb-4(align-center)
       v-icon.mr-3(large color="grey lighten-1") star
       h1
-        v-text-field.headline.snippet__title(:class="{ focus: focused.title }" :value="snippet.name" append-icon="edit" hide-details solo flat @focus="focused.title = true" @blur="focused.title = false")
+        v-text-field.headline.snippet__title(:class="{ focus: focused.title }" :value="snippet.label" append-icon="edit" hide-details solo flat @focus="focused.title = true" @blur="focused.title = false")
       v-spacer
       span(@click="verticalLayout = !verticalLayout")
         span.mr-2.subheading.grey--text Change layout
@@ -17,42 +17,24 @@
 
     multipane.outter(:layout="verticalLayout ? 'vertical' : 'horizontal'")
       multipane(:layout="verticalLayout ? 'horizontal' : 'vertical'")
-        v-textarea.pane.pane--source(box label="HTML" v-model="snippet.source.html" hide-details)
+        v-textarea.pane.pane--source(box hide-details label="HTML" v-model="snippet.source.html")
         multipane-resizer
-        div.pane.pane--source(box auto-grow label="CSS" v-model="snippet.source.css") div 2
+        v-textarea.pane.pane--source(box hide-details label="CSS" v-model="snippet.source.css")
         multipane-resizer
-        div.flex.pane.pane--source(box auto-grow label="CSS" v-model="snippet.source.js") div 3
+        v-textarea.flex.pane.pane--source(box hide-details label="JS" v-model="snippet.source.js")
       multipane-resizer
-      div.subheading.flex.pane(v-html="snippet.source.html")
+      iframe.flex.pane(:srcdoc="`<html><head><script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script><script>${snippet.source.js}</script><style>${snippet.source.css}</style></head><body>${snippet.source.html}</body></html>`")
 
-    //- v1.
-    //- multipane(:layout="verticalLayout ? 'vertical' : 'horizontal'")
-      v-card.pane.first(flat :style="{ width: verticalLayout ? '50%' : '100%' }")
-        v-card-title.subheading
-          v-icon.mr-2 code
-          | Source
-        v-card-text
-          multipane(:layout="verticalLayout ? 'horizontal' : 'vertical'")
-            div.pane.first(:style="{ width: verticalLayout ? '100%' : '50%' }") pane 1
-            multipane-resizer
-            div.flex.pane pane 2
-
-          //- v-textarea(box auto-grow label="Some source code." v-model="snippet.source")
-          //- v-layout
-            v-spacer
-            v-btn.mt-0.mx-0(color="primary" small round depressed)
-              v-icon.mr-1 check
-              | Save changes
-      multipane-resizer
-      v-card.flex.pane(flat)
-        v-card-title.subheading Result
-        v-card-text(v-html="snippet.source")
-
-    v-card-actions
-      router-link.mt-4(:to="{ name: 'home' }")
+    v-card-actions.mt-4
+      router-link(:to="{ name: 'home' }")
         v-btn.mr-2(color="primary" icon)
           v-icon chevron_left
         span.subheading.grey--text Back to list
+      v-spacer
+      v-btn.mt-0.mx-0(color="primary" small round depressed)
+        v-icon.mr-1 check
+        | Save changes
+
 </template>
 
 <script>
@@ -63,21 +45,25 @@ export default {
   components: { Multipane, MultipaneResizer },
   data: () => ({
     snippet: {
-      name: 'First Snippet',
-      description: 'Some content.',
+      label: '',
+      description: '',
+      icon: '',
       source: {
-        html: '<p><strong>Lorem ipsum dolor sit amet consectetur adipisicing elit.</strong></p>',
+        html: '',
         css: '',
         js: ''
       }
     },
-    compiled: null,
     verticalLayout: true,
     focused: {
       title: false,
       id: false
     }
-  })
+  }),
+  created () {
+    const json = require(`@/assets/snippets/${this.id}.json`)
+    this.snippet = Object.assign(this.snippet, json)
+  }
 }
 </script>
 
@@ -180,4 +166,8 @@ $primary: #42b983;
 .layout-h .pane--source {width: 33%;}
 
 .v-input__control, .v-input__slot {height: 100% !important;}
+
+iframe {
+  border: none;
+}
 </style>
