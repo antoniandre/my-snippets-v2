@@ -3,8 +3,8 @@
     v-toolbar.elevation-0(app dense color="white")
       v-toolbar-title
         router-link(to="/")
-        v-icon.mr-3 apps
-        | My Snippets
+          v-icon.mr-3(color="primary") apps
+          | My Snippets
       v-spacer
       v-btn(icon @click.stop="rightDrawer = !rightDrawer")
         v-icon menu
@@ -32,3 +32,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+a {
+  text-decoration: none;
+}
+</style>
