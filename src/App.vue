@@ -1,7 +1,10 @@
 <template lang="pug">
   v-app
     v-toolbar.elevation-0(app dense color="white")
-      v-toolbar-title My Snippets
+      v-toolbar-title
+        router-link(to="/")
+        v-icon.mr-3 apps
+        | My Snippets
       v-spacer
       v-btn(icon @click.stop="rightDrawer = !rightDrawer")
         v-icon menu
@@ -13,8 +16,8 @@
           v-list-tile-action
             v-icon compare_arrows
           v-list-tile-title Switch drawer (click me)
-    v-footer(app)
-      span &copy; 2018 Antoni Andre. All rights reserved.
+    v-footer.py-3.text-xs-center.justify-center(color="grey lighten-4")
+      span.font-italic.caption &copy; 2018 Antoni Andre. All rights reserved.
 </template>
 
 <script>
