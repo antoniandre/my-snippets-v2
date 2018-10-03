@@ -17,11 +17,14 @@
 
     multipane.outter(:layout="verticalLayout ? 'vertical' : 'horizontal'")
       multipane(:layout="verticalLayout ? 'horizontal' : 'vertical'")
-        v-textarea.pane.pane--source(box hide-details label="HTML" v-model="snippet.source.html")
+        ssh-pre.pane.pane--source(language="html" contenteditable).
+          {{ snippet.source.html }}
         multipane-resizer
-        v-textarea.pane.pane--source(box hide-details label="CSS" v-model="snippet.source.css")
+        ssh-pre.pane.pane--source(language="css" contenteditable).
+          {{ snippet.source.css }}
         multipane-resizer
-        v-textarea.flex.pane.pane--source(box hide-details label="JS" v-model="snippet.source.js")
+        ssh-pre.flex.pane.pane--source(language="js" contenteditable).
+          {{ snippet.source.js }}
       multipane-resizer
       iframe.flex.pane(:srcdoc="`<html><head><script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script><script>${snippet.source.js}</script><style>${snippet.source.css}</style></head><body>${snippet.source.html}</body></html>`")
 
@@ -39,10 +42,12 @@
 
 <script>
 import { Multipane, MultipaneResizer } from 'vue-multipane'
+import { simpleSyntaxHighlighter } from 'simple-syntax-highlighter'
+import 'simple-syntax-highlighter/dist/simple-syntax-highlighter.min.css'
 
 export default {
   props: [ 'id' ],
-  components: { Multipane, MultipaneResizer },
+  components: { Multipane, MultipaneResizer, 'ssh-pre': simpleSyntaxHighlighter },
   data: () => ({
     snippet: {
       label: '',
@@ -118,9 +123,11 @@ $primary: #42b983;
   }
 
   > .pane {
-    overflow: hidden;
+    overflow: auto;
     background: #f8f8f8;
     box-shadow: inset 0 0 4px rgba(#000, 0.1);
+    margin: 0;
+    border: none;
   }
 
   > .multipane-resizer {
