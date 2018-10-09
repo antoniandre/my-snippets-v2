@@ -15,7 +15,16 @@
       strong.mr-2.subheading id:
       v-text-field.d-inline-block.subheading.snippet__id(:class="{ focus: focused.id }" :value="id" append-icon="edit" hide-details solo flat @focus="focused.id = true" @blur="focused.id = false")
 
-    multipane.outter(:layout="verticalLayout ? 'vertical' : 'horizontal'")
+    split-panes(vertical style="height:400px")
+      span.span1 1
+      split-panes(horizontal)
+        span 2
+        span 3
+        span 4
+      span 5
+      span 6
+
+    //- multipane.outter(:layout="verticalLayout ? 'vertical' : 'horizontal'")
       multipane(:layout="verticalLayout ? 'horizontal' : 'vertical'")
         ssh-pre.pane.pane--source(language="html" contenteditable).
           {{ snippet.source.html }}
@@ -42,12 +51,13 @@
 
 <script>
 import { Multipane, MultipaneResizer } from 'vue-multipane'
+import SplitPanes from '@/components/split-panes'
 import { simpleSyntaxHighlighter } from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/simple-syntax-highlighter.min.css'
 
 export default {
   props: [ 'id' ],
-  components: { Multipane, MultipaneResizer, 'ssh-pre': simpleSyntaxHighlighter },
+  components: { SplitPanes, Multipane, MultipaneResizer, 'ssh-pre': simpleSyntaxHighlighter },
   data: () => ({
     snippet: {
       label: '',
@@ -109,72 +119,20 @@ $primary: #42b983;
   }
 }
 
-.multipane {
-  &.layout-v {
-    height: 400px;
-
-    > .multipane-resizer {margin-left: 0;left: 0;}
-  }
-
-  &.layout-h {
-    height: 100%;
-
-    > .multipane-resizer {margin-top: 0;top: 0;}
-  }
-
-  > .pane {
-    overflow: auto;
-    background: #f8f8f8;
-    box-shadow: inset 0 0 4px rgba(#000, 0.1);
-    margin: 0;
-    border: none;
-  }
-
-  > .multipane-resizer {
-    position: relative;
-    background: #fff;
-    z-index: 2;
-
-    &:before {
-      content: "";
-      position: absolute;
-      display: block;
-      width: 4px;
-      height: 40px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid #ccc;
-      border-width: 0 1px;
-      transition: 0.3s ease;
-
-    }
-
-    &:hover:before {
-      border-color: #999;
-    }
-  }
-
-  &.layout-h > .multipane-resizer:before {
-    width: 40px;
-    height: 4px;
-    border-width: 1px 0;
-  }
-}
-
-.outter.layout-h {height: 400px;}
-.layout-v .layout-h {width: 50%;}
-.layout-h .layout-v {height: 50%;}
-.layout-h .layout-v {width: 100% !important;}
-.layout-v .layout-h {height: 100% !important;}
-.layout-v .layout-h > .pane {width: 100% !important;}
-.layout-h .layout-v > .pane {height: 100% !important;}
-.layout-v .pane--source {height: 33%;}
-.layout-h .pane--source {width: 33%;}
-
-.v-input__control, .v-input__slot {height: 100% !important;}
-
 iframe {
   border: none;
+}
+
+.split-panes__pane {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+
+  span {
+    color: #fff;
+    font-size: 5em;
+    opacity: 0.6;
+  }
 }
 </style>
