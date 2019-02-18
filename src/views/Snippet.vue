@@ -15,14 +15,15 @@
       strong.mr-2.subheading id:
       v-text-field.d-inline-block.subheading.snippet__id(:class="{ focus: focused.id }" :value="id" append-icon="edit" hide-details solo flat @focus="focused.id = true" @blur="focused.id = false")
 
-    split-panes(vertical style="height:400px")
-      span.span1 1
-      split-panes(horizontal)
-        span 2
-        span 3
-        span 4
-      span 5
-      span 6
+    splitpanes.default-theme(:horizontal="!verticalLayout" style="height:400px" watch-slots)
+      splitpanes.default-theme(:horizontal="!!verticalLayout" watch-slots)
+        codemirror.precode(:value="snippet.source.js" :options="{ mode: 'javascript' }")
+        codemirror.precode(:value="snippet.source.html" :options="{ mode: 'htmlmixed' }")
+        //- precode(language="html" editable).
+          {{ snippet.source.html }}
+        //- precode(language="html" editable v-text="snippet.source.html")
+        .precode 3
+      .precode 1
 
     //- multipane.outter(:layout="verticalLayout ? 'vertical' : 'horizontal'")
       multipane(:layout="verticalLayout ? 'horizontal' : 'vertical'")
@@ -46,18 +47,22 @@
       v-btn.mt-0.mx-0(color="primary" small round depressed)
         v-icon.mr-1 check
         | Save changes
-
 </template>
 
 <script>
-import { Multipane, MultipaneResizer } from 'vue-multipane'
-import SplitPanes from '@/components/split-panes'
-import { simpleSyntaxHighlighter } from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/simple-syntax-highlighter.min.css'
+import Splitpanes from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
+// import { simpleSyntaxHighlighter } from 'simple-syntax-highlighter'
+// import 'simple-syntax-highlighter/dist/simple-syntax-highlighter.min.css'
+import Precode from '@/components/precode'
+import { codemirror } from 'vue-codemirror-lite'
+require('codemirror/mode/javascript/javascript')
+require('codemirror/mode/htmlmixed/htmlmixed')
+require('codemirror/mode/vue/vue')
 
 export default {
   props: [ 'id' ],
-  components: { SplitPanes, Multipane, MultipaneResizer, 'ssh-pre': simpleSyntaxHighlighter },
+  components: { Splitpanes, Precode, codemirror },
   data: () => ({
     snippet: {
       label: '',
@@ -123,16 +128,13 @@ iframe {
   border: none;
 }
 
-.split-panes__pane {
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  overflow: hidden;
+// .splitpanes {
+//   &__pane {}
+//   &--vertical &__splitter {width: 10px;background-color: #fff;}
+//   &--horizontal &__splitter {height: 10px;background-color: #fff;}
+// }
 
-  span {
-    color: #fff;
-    font-size: 5em;
-    opacity: 0.6;
-  }
+.CodeMirror {
+  background-color: transparent;
 }
 </style>
